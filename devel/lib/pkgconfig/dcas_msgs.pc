@@ -1,0 +1,8 @@
+prefix=/home/hjpark/automotive/digital_twin_sw/devel
+
+Name: dcas_msgs
+Description: Description of dcas_msgs
+Version: 0.1.0
+Cflags: -I/home/hjpark/automotive/digital_twin_sw/devel/include
+Libs: -L${prefix}/lib 
+Requires: message_runtime std_msgs geometry_msgs

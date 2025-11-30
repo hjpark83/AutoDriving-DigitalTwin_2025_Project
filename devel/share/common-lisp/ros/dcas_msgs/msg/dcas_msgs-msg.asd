@@ -1,0 +1,31 @@
+
+(cl:in-package :asdf)
+
+(defsystem "dcas_msgs-msg"
+  :depends-on (:roslisp-msg-protocol :roslisp-utils :geometry_msgs-msg
+               :std_msgs-msg
+)
+  :components ((:file "_package")
+    (:file "Lane" :depends-on ("_package_Lane"))
+    (:file "_package_Lane" :depends-on ("_package"))
+    (:file "LaneArray" :depends-on ("_package_LaneArray"))
+    (:file "_package_LaneArray" :depends-on ("_package"))
+    (:file "Object" :depends-on ("_package_Object"))
+    (:file "_package_Object" :depends-on ("_package"))
+    (:file "ObjectArray" :depends-on ("_package_ObjectArray"))
+    (:file "_package_ObjectArray" :depends-on ("_package"))
+    (:file "RadarDetection" :depends-on ("_package_RadarDetection"))
+    (:file "_package_RadarDetection" :depends-on ("_package"))
+    (:file "RadarDetectionArray" :depends-on ("_package_RadarDetectionArray"))
+    (:file "_package_RadarDetectionArray" :depends-on ("_package"))
+    (:file "TrafficLight" :depends-on ("_package_TrafficLight"))
+    (:file "_package_TrafficLight" :depends-on ("_package"))
+    (:file "TrafficLightArray" :depends-on ("_package_TrafficLightArray"))
+    (:file "_package_TrafficLightArray" :depends-on ("_package"))
+    (:file "TrafficSign" :depends-on ("_package_TrafficSign"))
+    (:file "_package_TrafficSign" :depends-on ("_package"))
+    (:file "TrafficSignArray" :depends-on ("_package_TrafficSignArray"))
+    (:file "_package_TrafficSignArray" :depends-on ("_package"))
+    (:file "VehicleState" :depends-on ("_package_VehicleState"))
+    (:file "_package_VehicleState" :depends-on ("_package"))
+  ))

@@ -1,0 +1,8 @@
+prefix=/home/hjpark/automotive/digital_twin_sw/devel
+
+Name: ros_tutorial
+Description: Description of ros_tutorial
+Version: 0.0.1
+Cflags: -I/home/hjpark/automotive/digital_twin_sw/devel/include
+Libs: -L${prefix}/lib 
+Requires: rospy std_msgs message_runtime visualization_msgs

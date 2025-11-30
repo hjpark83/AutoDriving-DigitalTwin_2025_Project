@@ -1,0 +1,271 @@
+# Vehicle parameters for dcas_perception_sim
+vehicle_node:
+  wheelbase: 2.8          # Wheelbase of the vehicle in meters
+  wheel_radius: 0.3       # Wheel radius in meters
+  pulses_per_revolution: 2  # Number of pulses per wheel revolution
+
+# Sensor parameters for dcas_perception_sim
+sensor_lidar_node:
+  # Sensor control
+  enabled: true                # Enable/disable sensor (true = on, false = off)
+  
+  # Sensor positioning relative to vehicle center
+  offset_x: 1.2                # Forward offset from vehicle center (meters, positive = front)
+  offset_y: 0.0                # Lateral offset from vehicle center (meters, positive = left)
+  offset_z: 1.5                # Vertical offset from vehicle center (meters, positive = up)
+  roll_deg: 0.0                # Sensor rotation around X-axis (degrees, positive = roll right)
+  pitch_deg: 0.0               # Sensor rotation around Y-axis (degrees, positive = pitch up)
+  yaw_deg: 0.0                 # Sensor rotation around Z-axis (degrees, positive = counterclockwise)
+  
+  # Detection parameters
+  radius: 50.0                 # Maximum detection range (meters) - reduced for performance
+  period_s: 0.1                # Update frequency (seconds, 0.1s = 10Hz)
+  
+  # Ring-based LiDAR configuration
+  num_rings: 16                # Number of vertical laser rings (8, 16, 32, 64)
+  horizontal_resolution: 6.0   # Horizontal angular resolution (degrees per ray, increased for performance)
+  vertical_fov_min: -8.0      # Minimum elevation angle (degrees, negative = downward)
+  vertical_fov_max: 8.0        # Maximum elevation angle (degrees, positive = upward)
+  rotation_frequency: 10.0     # LiDAR rotation frequency (Hz, how fast it spins)
+  
+  # Noise parameters
+  enable_noise: true           # Enable/disable Gaussian noise simulation
+  range_noise_std: 0.02        # Range measurement noise standard deviation (meters)
+  azimuth_noise_std: 0.1       # Horizontal angle noise standard deviation (degrees)
+  elevation_noise_std: 0.1     # Vertical angle noise standard deviation (degrees)
+  noise_seed: 42               # Random seed for reproducible noise (null for random behavior)
+  
+  # Clutter noise parameters (false positive points)
+  enable_clutter: true         # Enable/disable clutter (false positive) generation
+  clutter_probability: 1.0     # Probability of clutter per scan cycle (reduced for performance)
+  clutter_density: 10.0        # Average number of clutter points per occurrence (reduced)
+  clutter_range_min: 5.0       # Minimum range for clutter generation (meters)
+  clutter_range_max: 45.0      # Maximum range for clutter generation (meters)
+
+sensor_radar_node:
+  # Sensor control
+  enabled: true                # Enable/disable sensor (true = on, false = off)
+  
+  # Sensor positioning relative to vehicle center
+  offset_x: 1.0                # Forward offset from vehicle center (meters, positive = front)
+  offset_y: 0.0                # Lateral offset from vehicle center (meters, positive = left)
+  offset_z: 0.5                # Vertical offset from vehicle center (meters, positive = up)
+  roll_deg: 0.0                # Sensor rotation around X-axis (degrees, positive = roll right)
+  pitch_deg: 0.0               # Sensor rotation around Y-axis (degrees, positive = pitch up)
+  yaw_deg: 0.0                 # Sensor rotation around Z-axis (degrees, positive = counterclockwise)
+  
+  # Detection parameters
+  fov_deg: 120.0               # Field of view angle (degrees, total horizontal coverage)
+  max_range: 50.0              # Maximum detection range (meters)
+  guardrail_spacing: 2.0       # Spacing between guardrail detection points (meters)
+  period_s: 0.1                # Update frequency (seconds, 0.1s = 10Hz)
+  
+  # Signal parameters
+  range_resolution: 0.15       # Range resolution (meters)
+  velocity_resolution: 0.1     # Velocity resolution (m/s)
+  angle_resolution: 1.0        # Angular resolution (degrees)
+  
+  # Radar hardware parameters for power calculation
+  transmit_power_dbm: 20.0     # Transmitted power in dBm (typical automotive radar: 10-30 dBm)
+  transmit_antenna_gain_db: 25.0  # Transmit antenna gain in dB (typical: 20-30 dB)
+  receive_antenna_gain_db: 25.0   # Receive antenna gain in dB (typically same as transmit)
+  frequency_ghz: 77.0          # Operating frequency in GHz (typical automotive: 76-81 GHz)
+  antenna_aperture_m2: 0.01    # Effective antenna aperture area in m² (alternative to gain)
+  system_losses_db: 10.0       # Total system losses in dB (cables, processing, etc.)
+  noise_figure_db: 8.0         # Receiver noise figure in dB (typical: 6-12 dB)
+  
+  # Power threshold parameters  
+  power_threshold_dbm: -90.0   # Minimum received power for detection (dBm)
+  detection_probability: 0.99   # Detection probability for objects above power threshold
+  
+  # Legacy RCS threshold (kept for compatibility, but power threshold takes precedence)
+  rcs_threshold: -10.0         # Minimum RCS value for reliable detection (dBsm, typical: -20 to +20)
+
+  # Noise parameters
+  enable_noise: false           # Enable/disable Gaussian noise simulation
+  range_noise_std: 0.1         # Range measurement noise standard deviation (meters)
+  azimuth_noise_std: 0.5       # Horizontal angle noise standard deviation (degrees)
+  
+  # Clutter noise parameters
+  enable_clutter: true         # Enable/disable clutter (false positive) generation
+  clutter_probability: 1.0     # Probability of clutter per scan cycle (0.0-1.0)
+  clutter_density: 3.0         # Average number of clutter points per occurrence
+  clutter_range_min: 5.0       # Minimum range for clutter generation (meters)
+  clutter_range_max: 45.0      # Maximum range for clutter generation (meters)
+
+# Shared sensor parameters (used by both LiDAR and radar)
+sensor_shared_params:
+  # Object-specific reflectivity/RCS values
+  object_properties:
+    vehicle:
+      base_rcs: 10.0           # Base RCS for vehicles (m²)
+      reflectivity: 0.3        # Surface reflectivity coefficient (0.0-1.0, for radar power calculation)
+      base_intensity: 160      # Base intensity for vehicles (0-255, for LiDAR)
+    building:
+      base_rcs: 100.0          # Base RCS for buildings (m²)  
+      reflectivity: 0.8        # Concrete/brick reflectivity (high for hard surfaces)
+      base_intensity: 180      # Base intensity for buildings (0-255, for LiDAR)
+    guardrail:
+      base_rcs: 5.0            # Base RCS for metal guardrails (m²)
+      reflectivity: 0.9        # Metal reflectivity (very high)
+      base_intensity: 190      # Base intensity for guardrails (0-255, for LiDAR)
+    traffic_sign:
+      base_rcs: 8.0            # Base RCS for traffic signs (m²)
+      reflectivity: 0.7        # Retroreflective materials
+      base_intensity: 230      # Base intensity for traffic signs (0-255, for LiDAR)
+    ground:
+      base_rcs: 0.05           # Base RCS for ground/road (m²)
+      reflectivity: 0.1        # Asphalt reflectivity (low)
+      base_intensity: 70       # Base intensity for ground/road (0-255, for LiDAR)
+    lane_marking:
+      base_rcs: 0.08           # Base RCS for lane markings (m²)
+      reflectivity: 0.8        # Paint reflectivity (high)
+      base_intensity: 120      # Base intensity for lane markings (0-255, for LiDAR)
+  
+  # Clutter parameters
+  clutter:
+    intensity_min: 10          # Minimum intensity for clutter points (0-255)
+    intensity_max: 50          # Maximum intensity for clutter points (0-255)
+    rcs_min: 0.1               # Minimum RCS for clutter (m²)
+    rcs_max: 1.0               # Maximum RCS for clutter (m²)
+
+sensor_camera_node:
+  period_s: 0.1
+  enable_sensor: true
+  # Camera position relative to vehicle center (ego_frame)
+  offset_x: 1.1      # Forward offset from vehicle center (m)
+  offset_y: 0.0      # Left/right offset from vehicle center (m) 
+  offset_z: 1.4      # Height offset from ground (m)
+  # Camera orientation
+  roll_deg: 0.0     # Camera roll angle (positive = rolling right)
+  pitch_deg: 0.0     # Camera tilt angle (negative = pointing down)
+  yaw_deg: 0.0       # Camera yaw angle (0 = forward)
+  # Camera parameters
+  width: 640
+  height: 480
+  # Lens parameters
+  focal_length: 320.0      # Focal length (pixels)
+  # Distortion parameters
+  enable_distortion: true  # Enable/disable lens distortion simulation
+  distortion_k1: 0.5       # Radial distortion coefficient k1
+  distortion_k2: 0.1     # Radial distortion coefficient k2
+  distortion_k3: 0.01       # Radial distortion coefficient k3
+  distortion_p1: 0.01      # Tangential distortion coefficient p1
+  distortion_p2: 0.005     # Tangential distortion coefficient p2
+
+  # Clipping parameters
+  near_m: 0.01        # Near clipping distance (m)
+  far_m: 300.0       # Far clipping distance (m)
+
+sensor_gnss_node:
+  # Sensor control
+  enabled: true                           # Enable/disable sensor (true = on, false = off)
+  lat0: 37.000000                         # Initial Latitude of vehicle 
+  lon0: 127.000000                        # Initial Longitude of vehicle
+  alt0: 50.0                              # Initial Altitude of vehicle
+  period_s: 0.1                           # Update frequency (seconds, 0.1s = 10Hz)
+
+  #Noise parameters
+  enable_noise: True                      # Enable/disable Gaussian noise simulation
+  pos_noise_std: 0.1                      # Standard deviation of position noise in meters
+  vel_noise_std: 0.02                     # Standard deviation of velocity noise in m/s
+  ang_noise_std: 0.0005                   # Standard deviation of heading noise in radians
+  alt_noise_std: 0.2                      # Standard deviation of altitude noise in meters
+
+  # Shadow zone parameters
+  enable_shadow_zones: True               # Enable/disable shadow zone simulation
+  shadow_map_csv: gnss_shadow_zones.csv   # CSV file under dcas_perception_sim/maps or absolute path
+  # Shadow zone visualization
+  enable_shadow_viz: true                 # Enable/disable shadow zone visualization
+
+sensor_imu_node:
+  # Sensor control
+  enabled: true                         # Enable/disable sensor (true = on, false = off)
+  # Sensor parameters
+  period_s: 0.02
+  gravity: 9.81  # m/s^2, gravitational acceleration
+
+  # Noise parameters
+  enable_noise: true
+  orientation_noise_std: 0.01  # Standard deviation of orientation noise in radians
+  angular_velocity_noise_std: 0.01  # Standard deviation of angular velocity noise in rad/s
+  linear_acceleration_noise_std: 0.01  # Standard deviation of linear acceleration noise in m/s^2
+
+  # Bias drift parameters
+  enable_bias_drift: true
+  bias_drift: 0.1  # Standard deviation of bias drift per update
+
+sensor_motion_node:
+  # Sensor control
+  enabled: true                         # Enable/disable sensor (true = on, false = off)
+  # Sensor parameters
+  period_s: 0.02                        # Update frequency (seconds, 0.02s = 50Hz)
+
+  # Noise parameters
+  enable_noise: true                    # Enable/disable Gaussian noise simulation
+  angle_noise_std: 0.01                 # Standard deviation of motion sensor noise in radians
+
+env_lane_node:
+  period_s: 3.0
+
+env_guardrail_node:
+  period_s: 3.0
+
+env_building_node:
+  period_s: 3.0
+
+env_sign_node:
+  period_s: 3.0
+
+env_surrounding_vehicle_node:
+  period_s: 0.1
+
+env_traffic_light_node:
+  period_s: 1.0
+
+vehicle_kinematic_node:
+  dt: 0.02
+  max_accel: 3.0      # maximum commanded acceleration mapped to throttle=+1
+  max_decel: -6.0     # minimum commanded acceleration mapped to throttle=-1
+  model:
+    m: 1500.0     # mass (kg)
+    Iz: 2500.0    # yaw inertia (kg*m^2)
+    lf: 1.2       # CG to front axle (m)
+    lr: 1.5       # CG to rear axle (m)
+    width: 1.6    # track width (m)
+    h: 0.5        # CG height (m)
+    Iw: 1.0       # wheel inertia (kg*m^2)
+    Rw: 0.33      # wheel radius (m)
+    Caf: 80000.0  # front cornering stiffness (N/rad)
+    Car: 70000.0  # rear cornering stiffness (N/rad)
+    mu: 0.9       # friction coefficient
+    rho: 1.225    # air density (kg/m^3)
+    Cd: 0.35      # drag coefficient
+    A: 2.2        # frontal area (m^2)
+    g: 9.81       # gravity (m/s^2)
+
+teleop_keyboard_node:
+  rate_hz: 100
+  accel_cmd: 1.0       # m/s^2 while Up is held
+  brake_cmd: -3.0      # m/s^2 while Down is held
+  steer_cmd_deg: 15.0   # deg while Left/Right is held
+  use_pygame: true
+  hold_timeout_s: 0.2
+
+tf_sensor_frames_node:
+  parent_frame: ego_frame
+  frames:
+    - { child: lidar,  xyz: [1.2, 0.0, 1.5], rpy: [0.0, 0.0, 0.0] }
+    - { child: camera, xyz: [1.1, 0.0, 1.4], rpy: [0.0, 0.0, 0.0] }
+    - { child: radar,  xyz: [1.0, 0.0, 0.5], rpy: [0.0, 0.0, 0.0] }
+    - { child: imu,    xyz: [0.0, 0.0, 0.8], rpy: [0.0, 0.0, 0.0] }
+    - { child: gnss,   xyz: [0.0, 0.0, 1.7], rpy: [0.0, 0.0, 0.0] }
+
+# Map CSV configuration (relative to dcas_perception_sim/maps)
+map:
+  lanes_csv: lanes.csv
+  buildings_csv: buildings.csv
+  guardrails_csv: guardrails.csv
+  traffic_lights_csv: traffic_lights.csv
+  signs_csv: signs.csv
+  surrounding_vehicles_csv: surrounding_vehicles.csv

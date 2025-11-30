@@ -1,0 +1,3 @@
+float64 period
+float64 noise_standard_deviation
+float64 amplitude

@@ -1,0 +1,17 @@
+ipykernel
+numpy
+matplotlib
+rospkg
+rosbags
+pycryptodomex
+gnupg
+pandas
+folium
+opencv-python
+scipy
+plyfile
+jupyter
+ffmpeg
+graphviz
+pygame
+open3d==0.17.0

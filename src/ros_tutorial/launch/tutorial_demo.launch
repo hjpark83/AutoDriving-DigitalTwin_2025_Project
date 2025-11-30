@@ -1,0 +1,40 @@
+<launch>
+  <!-- 공통 파라미터 -->
+  <arg name="initial_period" default="2.0"/>
+  <arg name="initial_noise_standard_deviation" default="0.02"/>
+  <arg name="initial_amplitude" default="0.3"/>
+
+  <arg name="initial_speed_mps" default="5.0"/>
+  <arg name="wheel_base" default="2.7"/>
+  <arg name="frame_id" default="map"/>
+
+  <!-- 1) SineWaveSetNode -->
+  <node pkg="ros_tutorial" type="sine_wave_set_node.py" name="sine_wave_set_node" output="screen">
+    <param name="sine_command_topic" value="/sine_wave/input"/>
+    <param name="publish_rate_hz" value="5.0"/>
+    <param name="initial_period" value="$(arg initial_period)"/>
+    <param name="initial_noise_standard_deviation" value="$(arg initial_noise_standard_deviation)"/>
+    <param name="initial_amplitude" value="$(arg initial_amplitude)"/>
+  </node>
+
+  <!-- 2) SteeringSineWaveGeneratorNode -->
+  <node pkg="ros_tutorial" type="steering_sine_wave_generator_node.py" name="steering_sine_wave_generator_node" output="screen">
+    <param name="sine_command_topic" value="/sine_wave/input"/>
+    <param name="steering_command_topic" value="/steering_cmd"/>
+    <param name="loop_rate_hz" value="50.0"/>
+    <param name="initial_period" value="$(arg initial_period)"/>
+    <param name="initial_noise_standard_deviation" value="$(arg initial_noise_standard_deviation)"/>
+    <param name="initial_amplitude" value="$(arg initial_amplitude)"/>
+  </node>
+
+  <!-- 3) KinematicVehicleModelNode -->
+  <node pkg="ros_tutorial" type="kinematic_bicycle_model_node.py" name="kinematic_bicycle_model_node" output="screen">
+    <param name="steering_command_topic" value="/steering_cmd"/>
+    <param name="vehicle_state_topic" value="/vehicle/state"/>
+    <param name="vehicle_marker_topic" value="/vehicle/marker"/>
+    <param name="loop_rate_hz" value="50.0"/>
+    <param name="initial_speed_mps" value="$(arg initial_speed_mps)"/>
+    <param name="wheel_base" value="$(arg wheel_base)"/>
+    <param name="frame_id" value="$(arg frame_id)"/>
+  </node>
+</launch>

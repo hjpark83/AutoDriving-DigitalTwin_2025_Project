@@ -1,0 +1,8 @@
+prefix=/home/hjpark/automotive/digital_twin_sw/install
+
+Name: dcas_lanelet_tutorial
+Description: Description of dcas_lanelet_tutorial
+Version: 0.1.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: rospy std_msgs geometry_msgs sensor_msgs visualization_msgs

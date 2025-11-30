@@ -1,0 +1,8 @@
+prefix=/home/hjpark/automotive/digital_twin_sw/devel
+
+Name: dcas_perception_sim
+Description: Description of dcas_perception_sim
+Version: 0.1.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: rospy std_msgs geometry_msgs sensor_msgs nav_msgs visualization_msgs dcas_msgs
